@@ -88,6 +88,11 @@ export function calculateUtilization(
 /**
  * Determines if budget alert thresholds have been exceeded.
  */
+export interface BudgetMetrics {
+  budgets: Array<BudgetUtilization & { budget: Budget }>;
+  totalCount: number;
+}
+
 export interface BudgetMetricsQueryOptions {
   /** Minimum utilization ratio (0 to 1) or percentage (0 to 100) to filter budgets. */
   threshold?: number;
