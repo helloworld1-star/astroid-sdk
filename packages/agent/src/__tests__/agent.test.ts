@@ -231,6 +231,34 @@ describe('AgentResource CRUD', () => {
       expect(result.meta?.total).toBe(1);
       expect(result.meta?.page).toBe(1);
     });
+
+    it('serializes filtering options including status, tags, and date ranges correctly', async () => {
+      http.get.mockResolvedValue(httpOk([]));
+
+      await resource.list({
+        status: 'ACTIVE',
+        tag: 'defi',
+        tags: ['defi', 'liquidity'],
+        from: '2026-01-01T00:00:00.000Z',
+        to: '2026-01-31T23:59:59.999Z',
+        createdAfter: '2026-01-01T00:00:00.000Z',
+        createdBefore: '2026-01-31T23:59:59.999Z',
+        search: 'arbitrage',
+      });
+
+      expect(http.get).toHaveBeenCalledWith('/agents', {
+        query: {
+          status: 'ACTIVE',
+          tag: 'defi',
+          tags: ['defi', 'liquidity'],
+          from: '2026-01-01T00:00:00.000Z',
+          to: '2026-01-31T23:59:59.999Z',
+          createdAfter: '2026-01-01T00:00:00.000Z',
+          createdBefore: '2026-01-31T23:59:59.999Z',
+          search: 'arbitrage',
+        },
+      });
+    });
   });
 
   // -------------------------------------------------------------------------

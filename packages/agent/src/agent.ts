@@ -29,6 +29,7 @@ import {
 } from './schemas.js';
 
 /** Filters accepted by {@link AgentResource.list}. */
+export type AgentFilterOptions = ListAgentsParams;
 export type AgentListParams = ListAgentsParams;
 export type AgentListOptions = ListAgentsParams;
 
@@ -521,15 +522,18 @@ function toAgentEventQuery(
   return query;
 }
 
-function toAgentListQuery(params: AgentListOptions = {}): Record<string, string | number> {
-  const query: Record<string, string | number> = {};
+function toAgentListQuery(params: AgentListOptions = {}): Record<string, string | number | string[]> {
+  const query: Record<string, string | number | string[]> = {};
   if (params.page !== undefined) query.page = params.page;
   if (params.limit !== undefined) query.limit = params.limit;
   if (params.cursor !== undefined) query.cursor = params.cursor;
   if (params.status !== undefined) query.status = params.status;
   if (params.role !== undefined) query.role = params.role;
   if (params.tag !== undefined) query.tag = params.tag;
+  if (params.tags !== undefined) query.tags = Array.isArray(params.tags) ? params.tags.join(',') : params.tags;
   if (params.search !== undefined) query.search = params.search;
+  if (params.from !== undefined) query.from = params.from;
+  if (params.to !== undefined) query.to = params.to;
   return query;
 }
 

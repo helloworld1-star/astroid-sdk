@@ -134,3 +134,9 @@ export {
   type UseAgentListResult,
   type AgentListPageParam,
 } from './hooks/useAgentList.js';
+export {
+  useAgentAnalytics,
+  agentAnalyticsKeys,
+  type UseAgentAnalyticsOptions,
+  type AgentAnalyticsData,
+} from './hooks/useAgentAnalytics.js';

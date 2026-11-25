@@ -88,6 +88,34 @@ export function calculateUtilization(
 /**
  * Determines if budget alert thresholds have been exceeded.
  */
+export interface BudgetMetricsQueryOptions {
+  /** Minimum utilization ratio (0 to 1) or percentage (0 to 100) to filter budgets. */
+  threshold?: number;
+  /** Filter by budget period. */
+  period?: string;
+  /** Filter by enabled state. */
+  enabled?: boolean;
+}
+
+/**
+ * Retrieve aggregated metrics and utilization stats for budgets, optionally filtered by threshold.
+ */
+export function getBudgetMetrics(budgets: Budget[], options?: BudgetMetricsQueryOptions): Array<BudgetUtilization & { budget: Budget }> {
+  const results: Array<BudgetUtilization & { budget: Budget }> = [];
+  for (const b of budgets) {
+    if (options?.period && b.period !== options.period) continue;
+    if (options?.enabled !== undefined && b.enabled !== options.enabled) continue;
+    
+    const util = calculateUtilization(b);
+    if (options?.threshold !== undefined) {
+      const target = options.threshold > 1 ? options.threshold / 100 : options.threshold;
+      if (util.utilization < target) continue;
+    }
+    results.push({ ...util, budget: b });
+  }
+  return results;
+}
+
 export function isThresholdExceeded(
   budget: Budget,
   thresholds?: { warn?: number; critical?: number },
